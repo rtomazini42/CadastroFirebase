@@ -1,0 +1,96 @@
+object Form2: TForm2
+  Left = 0
+  Top = 0
+  Caption = 'Form2'
+  ClientHeight = 298
+  ClientWidth = 338
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object EdtNome: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 4
+    Position.X = 88.000000000000000000
+    Position.Y = 104.000000000000000000
+    Size.Width = 225.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object EdtEmail: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 2
+    Position.X = 88.000000000000000000
+    Position.Y = 142.000000000000000000
+    Size.Width = 225.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object EdtPassword: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 1
+    Password = True
+    Position.X = 88.000000000000000000
+    Position.Y = 180.000000000000000000
+    Size.Width = 225.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Edit4: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 0
+    Position.X = 112.000000000000000000
+    Position.Y = 154.000000000000000000
+    Visible = False
+  end
+  object Nome: TLabel
+    Position.X = 30.000000000000000000
+    Position.Y = 109.000000000000000000
+    Text = 'Nome'
+    TabOrder = 9
+  end
+  object Email: TLabel
+    Position.X = 30.000000000000000000
+    Position.Y = 147.000000000000000000
+    Text = 'Email'
+    TabOrder = 7
+  end
+  object Label3: TLabel
+    Position.X = 30.000000000000000000
+    Position.Y = 185.000000000000000000
+    Text = 'Password'
+    TabOrder = 6
+  end
+  object Label4: TLabel
+    Position.X = 54.000000000000000000
+    Position.Y = 159.000000000000000000
+    Text = 'Label1'
+    Visible = False
+    TabOrder = 5
+  end
+  object Button1: TButton
+    Position.X = 88.000000000000000000
+    Position.Y = 232.000000000000000000
+    Size.Width = 161.000000000000000000
+    Size.Height = 41.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 10
+    Text = 'Cadastrar'
+    OnClick = rect_criar_contaClick
+  end
+  object EdtGrupos: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    TabOrder = 3
+    Position.X = 88.000000000000000000
+    Position.Y = 74.000000000000000000
+    Size.Width = 225.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Label2: TLabel
+    Position.X = 30.000000000000000000
+    Position.Y = 79.000000000000000000
+    Text = 'Grupos'
+    TabOrder = 8
+  end
+end

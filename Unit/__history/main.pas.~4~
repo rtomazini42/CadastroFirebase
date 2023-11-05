@@ -1,0 +1,232 @@
+unit main;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
+  FMX.Controls.Presentation, FMX.Edit, system.JSON;
+
+type
+  TForm2 = class(TForm)
+    EdtNome: TEdit;
+    EdtEmail: TEdit;
+    EdtPassword: TEdit;
+    Edit4: TEdit;
+    Nome: TLabel;
+    Email: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Button1: TButton;
+    EdtGrupos: TEdit;
+    Label2: TLabel;
+    procedure rect_criar_contaClick(Sender: TObject);
+  private
+
+    function CreateAccount(email, senha: string; out idUsuario,
+      erro: string): boolean;
+    function InsertUserToDatabase(idUsuario, email, nomeUsuario, grupo,
+      linkFotoPerfil: string; out erro: string): boolean;
+    procedure InsertUserToGroups(idUsuario, grupos: string);
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form2: TForm2;
+
+
+const
+  api_firebase = 'AIzaSyBi-0KnIdhlzNh_RCkptBJbgKt2rDR475g';
+
+implementation
+
+{$R *.fmx}
+
+uses Firebase.Auth, Firebase.Database, Firebase.Interfaces, Firebase.Request,
+  Firebase.Response;
+
+procedure TForm2.rect_criar_contaClick(Sender: TObject);
+var
+    idUsuario, erro : string;
+begin
+    if NOT CreateAccount(EdtEmail.Text,
+                          EdtPassword.Text,
+                         idUsuario,
+                         erro) then
+        showmessage(erro)
+    else
+        showmessage('Conta criada com sucesso: ' + idUsuario);
+
+end;
+
+function TForm2.CreateAccount(email, senha: string;
+                              out idUsuario, erro: string): boolean;
+var
+    fbAuth : IFirebaseAuth;
+    resp : IFirebaseResponse;
+    json, jsonRet : TJSONObject;
+    jsonValue : TJSONValue;
+    fotoTemp: String;
+begin
+    fotoTemp := 'https://firebasestorage.googleapis.com/v0/b/appviacriativa.appspot.com/o/Icon_250.jpg?alt=media&token=799ca102-9d61-48f6-b69f-36d0613085cb';
+    try
+        erro := '';
+        fbAuth := TFirebaseAuth.Create;
+        fbAuth.SetApiKey(api_firebase);
+        resp := fbAuth.CreateUserWithEmailAndPassword(email, senha);
+        try
+            json := TJSONObject.ParseJSONValue(
+                            TEncoding.UTF8.GetBytes(resp.ContentAsString), 0) as TJSONObject;
+            if NOT Assigned(json) then
+            begin
+                Result := false;
+                erro := 'Não foi possível verificar o retorno do servidor (JSON inválido)';
+                exit;
+            end;
+        except on ex:exception do
+            begin
+                Result := false;
+                erro := ex.Message;
+                exit;
+            end;
+        end;
+        if json.TryGetValue('error', jsonRet) then
+        begin
+            erro := jsonRet.Values['message'].Value;
+            Result := false;
+        end
+        else if json.TryGetValue('localId', jsonValue) then
+        begin
+            idUsuario := jsonValue.Value;
+            // Inserir usuário no banco de dados
+            if not InsertUserToDatabase(idUsuario, EdtEmail.Text, EdtNome.Text,EdtGrupos.Text,fotoTemp, erro) then
+            begin
+                //erro := 'Falha ao inserir usuário no banco de dados.';
+                Result := false;
+                exit;
+            end;
+            Result := true;
+        end
+        else
+        begin
+            erro := 'Retorno desconhecido';
+            Result := false;
+        end;
+    finally
+        if Assigned(json) then
+            json.DisposeOf;
+    end;
+end;
+
+function TForm2.InsertUserToDatabase(idUsuario, email, nomeUsuario, grupo, linkFotoPerfil: string; out erro: string): boolean;
+var
+  FirebaseDB: TFirebaseDatabase;
+  Response: IFirebaseResponse;
+  UserJson: TJSONObject;
+begin
+  Result := false;
+  // Criando um objeto JSON para o usuário
+  UserJson := TJSONObject.Create;
+  try
+    UserJson.AddPair('EMAIL', email); // Chave em caixa alta
+    UserJson.AddPair('NOMEUSUARIO', nomeUsuario); // Chave em caixa alta
+    UserJson.AddPair('LINKFOTOPERFIL', linkFotoPerfil); // Chave em caixa alta
+   // UserJson.AddPair('GRUPOS', grupo); // Chave em caixa alta
+    UserJson.AddPair('XP', TJSONNumber.Create(0)); // Chave em caixa alta
+
+    // Criando instância do Firebase Database e definindo as credenciais
+    FirebaseDB := TFirebaseDatabase.Create;
+    try
+      FirebaseDB.BaseURI := 'https://appviacriativa-default-rtdb.firebaseio.com';
+      FirebaseDB.Token := 'OYWhR4sdLoJDbG9bPQrf7MiebYbhF3zjzzCTBqOw'; // Se necessário
+
+      // Inserindo o usuário no Realtime Database no documento "USERS"
+      Response := FirebaseDB.Put(['USERS', idUsuario + '.json'], UserJson);
+
+      if Response.IsSuccess then
+      begin
+        Result := true;
+        ShowMessage('Insert successful');
+      end
+      else
+      begin
+        erro := Response.ContentAsString;
+        ShowMessage('Insert failed: ' + erro);
+      end;
+    finally
+      FirebaseDB.Free;
+    end;
+  finally
+    InsertUserToGroups(idUsuario, grupo);
+    //UserJson.Free;
+  end;
+end;
+
+
+procedure TForm2.InsertUserToGroups(idUsuario, grupos: string);
+var
+  FirebaseDB: TFirebaseDatabase;
+  GroupsJson: TJSONObject;
+  GroupsArray: TJSONArray;
+  GroupList: TStringList;
+  GroupName: string;
+  GroupExists: Boolean;
+  GroupIndex: Integer;
+begin
+  // Criando instância do Firebase Database e definindo as credenciais
+  FirebaseDB := TFirebaseDatabase.Create;
+  try
+    FirebaseDB.BaseURI := 'https://appviacriativa-default-rtdb.firebaseio.com';
+    FirebaseDB.Token := 'OYWhR4sdLoJDbG9bPQrf7MiebYbhF3zjzzCTBqOw'; // Se necessário
+
+    // Criando um objeto JSON para os grupos
+    GroupsJson := TJSONObject.Create;
+    GroupsArray := TJSONArray.Create;
+
+    // Separando a string de grupos em que o usuário está cadastrado
+    GroupList := TStringList.Create;
+    try
+      GroupList.Delimiter := ';'; // Usar ponto e vírgula como separador
+      GroupList.DelimitedText := grupos;
+
+      // Iterando pelos grupos
+      for GroupName in GroupList do
+      begin
+        GroupExists := False;
+
+        // Verificando se o grupo já existe no documento "GRUPOS"
+        for GroupIndex := 0 to GroupsArray.Count - 1 do
+        begin
+          if TJSONObject(GroupsArray.Items[GroupIndex]).GetValue(GroupName) <> nil then
+          begin
+            // Grupo já existe, adicionando o ID do usuário
+            TJSONArray(TJSONObject(GroupsArray.Items[GroupIndex]).GetValue(GroupName)).Add(idUsuario);
+            GroupExists := True;
+            Break;
+          end;
+        end;
+
+        if not GroupExists then
+        begin
+          // Grupo não existe, criando um novo grupo no documento "GRUPOS"
+          GroupsArray.AddElement(TJSONObject.Create.AddPair(GroupName, TJSONArray.Create.Add(idUsuario)));
+        end;
+      end;
+
+      // Atualizando o documento "GRUPOS" no Realtime Database
+      GroupsJson.AddPair('grupos', GroupsArray);
+      FirebaseDB.Put(['GRUPOS.json'], GroupsJson);
+    finally
+      GroupList.Free;
+    end;
+  finally
+    FirebaseDB.Free;
+  end;
+end;
+
+
+
+
+end.
