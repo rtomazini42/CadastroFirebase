@@ -285,6 +285,11 @@
             <Form>Form2</Form>
             <FormType>fmx</FormType>
         </DCCReference>
+        <DCCReference Include="Firebase\Firebase.Auth.pas"/>
+        <DCCReference Include="Firebase\Firebase.Database.pas"/>
+        <DCCReference Include="Firebase\Firebase.Interfaces.pas"/>
+        <DCCReference Include="Firebase\Firebase.Request.pas"/>
+        <DCCReference Include="Firebase\Firebase.Response.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

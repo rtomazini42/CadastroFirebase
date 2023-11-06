@@ -134,15 +134,13 @@ begin
     UserJson.AddPair('LINKFOTOPERFIL', linkFotoPerfil);
     UserJson.AddPair('GRUPOS', grupo);
     UserJson.AddPair('XP', TJSONNumber.Create(0));
-
+    UserJson.AddPair('STATUSONLINE', TJSONBool.Create(False));
     FirebaseDB := TFirebaseDatabase.Create;
     try
       FirebaseDB.BaseURI := 'https://appviacriativa-default-rtdb.firebaseio.com';
       FirebaseDB.Token := 'OYWhR4sdLoJDbG9bPQrf7MiebYbhF3zjzzCTBqOw';
 
-
       Response := FirebaseDB.Put(['USERS', idUsuario + '.json'], UserJson);
-
       if Response.IsSuccess then
       begin
         Result := true;
@@ -163,7 +161,6 @@ begin
   end;
 end;
 
-
 {Procedure TForm2.InsertUserToGroups(idUsuario, grupos: string);
 var
   FirebaseDB: TFirebaseDatabase;
@@ -176,23 +173,19 @@ begin
   try
     FirebaseDB.BaseURI := 'https://appviacriativa-default-rtdb.firebaseio.com';
     FirebaseDB.Token := 'OYWhR4sdLoJDbG9bPQrf7MiebYbhF3zjzzCTBqOw'; // Se necessário
-
     // Criando um objeto JSON para os grupos
     GroupsJson := TJSONObject.Create;
-
     // Separando a string de grupos em que o usuário está cadastrado
     GroupList := TStringList.Create;
     try
       GroupList.Delimiter := ';'; // Usar ponto e vírgula como separador
       GroupList.DelimitedText := grupos;
-
       // Iterando pelos grupos
       for GroupName in GroupList do
       begin
         // Criando um objeto JSON para o grupo, com o ID do usuário
         GroupsJson.AddPair(GroupName, TJSONArray.Create(TJSONString.Create(idUsuario)));
       end;
-
       // Atualizando o documento "GRUPOS" no Realtime Database
       FirebaseDB.Put(['GRUPOS.json'], GroupsJson);
     finally
@@ -202,7 +195,6 @@ begin
     FirebaseDB.Free;
   end;
 end;     }
-
 
 {procedure TForm2.InsertUserToGroups(idUsuario, grupos: string);
 var
@@ -216,16 +208,13 @@ begin
   try
     FirebaseDB.BaseURI := 'https://appviacriativa-default-rtdb.firebaseio.com';
     FirebaseDB.Token := 'OYWhR4sdLoJDbG9bPQrf7MiebYbhF3zjzzCTBqOw'; // Se necessário
-
     // Criando um objeto JSON para os grupos
     GroupsJson := TJSONObject.Create;
-
     // Separando a string de grupos em que o usuário está cadastrado
     GroupList := TStringList.Create;
     try
       GroupList.Delimiter := ';'; // Usar ponto e vírgula como separador
       GroupList.DelimitedText := grupos;
-
       // Iterando pelos grupos
       for GroupName in GroupList do
       begin
@@ -241,7 +230,6 @@ begin
           GroupsJson.AddPair(GroupName, TJSONArray.Create(TJSONString.Create(idUsuario)));
         end;
       end;
-
       // Atualizando o documento "GRUPOS" no Realtime Database
       FirebaseDB.Patch(['GRUPOS.json'], GroupsJson);
     finally
@@ -251,7 +239,6 @@ begin
     FirebaseDB.Free;
   end;
 end;    }
-
 //procedure TForm2.InsertUserToGroups(idUsuario, grupos: string);
 //var
 //  FirebaseDB: TFirebaseDatabase;
@@ -304,7 +291,6 @@ end;    }
 //    FirebaseDB.Free;
 //  end;
 //end;
-
 procedure TForm2.InsertUserToGroups(idUsuario, grupos: string);
 var
   FirebaseDB: TFirebaseDatabase;
@@ -316,12 +302,10 @@ begin
   try
     FirebaseDB.BaseURI := 'https://appviacriativa-default-rtdb.firebaseio.com';
     FirebaseDB.Token := 'OYWhR4sdLoJDbG9bPQrf7MiebYbhF3zjzzCTBqOw';
-
     GroupList := TStringList.Create;
     try
       GroupList.Delimiter := ';';
       GroupList.DelimitedText := grupos;
-
       for GroupName in GroupList do
       begin
         UsersInGroup := TJSONObject.Create;
@@ -335,8 +319,6 @@ begin
     FirebaseDB.Free;
   end;
 end;
-
-
 
 
 

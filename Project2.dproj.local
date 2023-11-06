@@ -7,5 +7,10 @@
     <Transaction>2023/11/05 13:01:19.155,C:\Users\Tomazini\Desktop\CadastroChat\Unit\main.fmx=D:\Users\Tomazini\Documents\Embarcadero\Studio\Projects\Unit2.fmx</Transaction>
     <Transaction>2023/11/05 13:01:19.155,C:\Users\Tomazini\Desktop\CadastroChat\Unit\main.pas=D:\Users\Tomazini\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
     <Transaction>2023/11/05 13:01:23.288,C:\Users\Tomazini\Desktop\CadastroChat\Project2.dproj=D:\Users\Tomazini\Documents\Embarcadero\Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>2023/11/05 13:01:49.547,=C:\Users\Tomazini\Desktop\CadastroChat\Firebase\Firebase.Auth.pas</Transaction>
+    <Transaction>2023/11/05 13:01:49.601,=C:\Users\Tomazini\Desktop\CadastroChat\Firebase\Firebase.Database.pas</Transaction>
+    <Transaction>2023/11/05 13:01:49.630,=C:\Users\Tomazini\Desktop\CadastroChat\Firebase\Firebase.Interfaces.pas</Transaction>
+    <Transaction>2023/11/05 13:01:49.684,=C:\Users\Tomazini\Desktop\CadastroChat\Firebase\Firebase.Request.pas</Transaction>
+    <Transaction>2023/11/05 13:01:49.746,=C:\Users\Tomazini\Desktop\CadastroChat\Firebase\Firebase.Response.pas</Transaction>
   </Transactions>
 </BorlandProject>
