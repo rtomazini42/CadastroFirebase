@@ -39,7 +39,7 @@ var
 
 
 const
-  api_firebase = 'AIzaSyBi-0KnIdhlzNh_RCkptBJbgKt2rDR475g';
+  api_firebase = 'AIzaSyBi-0KnIdhlzNh_RCkptBJbgKt2rDR475g'; //t√° desatualizado mesmo, vou deixar publico
 
 implementation
 
@@ -83,7 +83,7 @@ begin
             if NOT Assigned(json) then
             begin
                 Result := false;
-                erro := 'N„o foi possÌvel verificar o retorno do servidor (JSON inv·lido)';
+                erro := 'N√£o foi poss√≠vel verificar o retorno do servidor (JSON inv√°lido)';
                 exit;
             end;
         except on ex:exception do
@@ -101,7 +101,7 @@ begin
         else if json.TryGetValue('localId', jsonValue) then
         begin
             idUsuario := jsonValue.Value;
-            // Inserir usu·rio no banco de dados
+            // Inserir usu√°rio no banco de dados
             if not InsertUserToDatabase(idUsuario, EdtEmail.Text, EdtNome.Text,EdtGrupos.Text,fotoTemp, erro) then
             begin
                 Result := false;
@@ -144,12 +144,12 @@ begin
       if Response.IsSuccess then
       begin
         Result := true;
-        ShowMessage('InserÁ„o feita com sucesso!');
+        ShowMessage('Inser√ß√£o feita com sucesso!');
       end
       else
       begin
         erro := Response.ContentAsString;
-        ShowMessage('Falha de inserÁ„o: ' + erro);
+        ShowMessage('Falha de inser√ß√£o: ' + erro);
       end;
     finally
       FirebaseDB.Free;
@@ -157,7 +157,7 @@ begin
   finally
     InsertUserToGroups(idUsuario, grupo);
     //UserJson.Free;
-    //nao entendo pq isso est· dando erro de memoria
+    //nao entendo pq isso est√° dando erro de memoria
   end;
 end;
 
@@ -168,22 +168,22 @@ var
   GroupList: TStringList;
   GroupName: string;
 begin
-  // Criando inst‚ncia do Firebase Database e definindo as credenciais
+  // Criando inst√¢ncia do Firebase Database e definindo as credenciais
   FirebaseDB := TFirebaseDatabase.Create;
   try
     FirebaseDB.BaseURI := 'https://appviacriativa-default-rtdb.firebaseio.com';
-    FirebaseDB.Token := 'OYWhR4sdLoJDbG9bPQrf7MiebYbhF3zjzzCTBqOw'; // Se necess·rio
+    FirebaseDB.Token := 'OYWhR4sdLoJDbG9bPQrf7MiebYbhF3zjzzCTBqOw'; // Se necess√°rio
     // Criando um objeto JSON para os grupos
     GroupsJson := TJSONObject.Create;
-    // Separando a string de grupos em que o usu·rio est· cadastrado
+    // Separando a string de grupos em que o usu√°rio est√° cadastrado
     GroupList := TStringList.Create;
     try
-      GroupList.Delimiter := ';'; // Usar ponto e vÌrgula como separador
+      GroupList.Delimiter := ';'; // Usar ponto e v√≠rgula como separador
       GroupList.DelimitedText := grupos;
       // Iterando pelos grupos
       for GroupName in GroupList do
       begin
-        // Criando um objeto JSON para o grupo, com o ID do usu·rio
+        // Criando um objeto JSON para o grupo, com o ID do usu√°rio
         GroupsJson.AddPair(GroupName, TJSONArray.Create(TJSONString.Create(idUsuario)));
       end;
       // Atualizando o documento "GRUPOS" no Realtime Database
@@ -203,30 +203,30 @@ var
   GroupList: TStringList;
   GroupName: string;
 begin
-  // Criando inst‚ncia do Firebase Database e definindo as credenciais
+  // Criando inst√¢ncia do Firebase Database e definindo as credenciais
   FirebaseDB := TFirebaseDatabase.Create;
   try
     FirebaseDB.BaseURI := 'https://appviacriativa-default-rtdb.firebaseio.com';
-    FirebaseDB.Token := 'OYWhR4sdLoJDbG9bPQrf7MiebYbhF3zjzzCTBqOw'; // Se necess·rio
+    FirebaseDB.Token := 'OYWhR4sdLoJDbG9bPQrf7MiebYbhF3zjzzCTBqOw'; // Se necess√°rio
     // Criando um objeto JSON para os grupos
     GroupsJson := TJSONObject.Create;
-    // Separando a string de grupos em que o usu·rio est· cadastrado
+    // Separando a string de grupos em que o usu√°rio est√° cadastrado
     GroupList := TStringList.Create;
     try
-      GroupList.Delimiter := ';'; // Usar ponto e vÌrgula como separador
+      GroupList.Delimiter := ';'; // Usar ponto e v√≠rgula como separador
       GroupList.DelimitedText := grupos;
       // Iterando pelos grupos
       for GroupName in GroupList do
       begin
-        // Verificando se o grupo j· existe no documento "GRUPOS"
+        // Verificando se o grupo j√° existe no documento "GRUPOS"
         if GroupsJson.GetValue(GroupName) <> nil then
         begin
-          // Grupo j· existe, adicionando o ID do usu·rio ‡ lista de usu·rios
+          // Grupo j√° existe, adicionando o ID do usu√°rio √† lista de usu√°rios
           TJSONArray(GroupsJson.GetValue(GroupName)).Add(idUsuario);
         end
         else
         begin
-          // Grupo n„o existe, criando um novo grupo com o ID do usu·rio na lista de usu·rios
+          // Grupo n√£o existe, criando um novo grupo com o ID do usu√°rio na lista de usu√°rios
           GroupsJson.AddPair(GroupName, TJSONArray.Create(TJSONString.Create(idUsuario)));
         end;
       end;
@@ -260,7 +260,7 @@ end;    }
 //
 //      for GroupName in GroupList do
 //      begin
-//        // Verificar se o grupo j· existe em "GRUPOS"
+//        // Verificar se o grupo j√° existe em "GRUPOS"
 //        ResponseContent := FirebaseDB.Get(['GRUPOS', GroupName + '.json']).ContentAsString;
 //
 //        if ResponseContent <> '' then
@@ -269,18 +269,18 @@ end;    }
 //
 //          if UsersInGroup = nil then
 //          begin
-//            // Se o grupo n„o existir, criar um objeto JSON para ele
+//            // Se o grupo n√£o existir, criar um objeto JSON para ele
 //            UsersInGroup := TJSONObject.Create;
 //          end;
 //
-//          // Criar um objeto JSON para o nÛ do usu·rio no grupo
+//          // Criar um objeto JSON para o n√≥ do usu√°rio no grupo
 //          UserGroupNode := TJSONObject.Create;
 //          UserGroupNode.AddPair('USERID', TJSONString.Create(idUsuario));
 //
-//          // Adicionar o nÛ do usu·rio ao grupo
+//          // Adicionar o n√≥ do usu√°rio ao grupo
 //          UsersInGroup.AddPair('USERS', UserGroupNode);
 //
-//          // Atualizar o documento "GRUPOS" com os usu·rios no grupo
+//          // Atualizar o documento "GRUPOS" com os usu√°rios no grupo
 //          FirebaseDB.Put(['GRUPOS', GroupName + '.json'], UsersInGroup);
 //        end;
 //      end;
